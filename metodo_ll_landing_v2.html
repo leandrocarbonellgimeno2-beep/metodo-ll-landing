@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Método LL - Desarrollo y Negocios</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:ital,wght@0,600;1,600&family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-dark: #050505;
+            --bg-section: #111111;
+            --bg-card: #1a1a1a;
+            --accent-gold: #c5a059;
+            --accent-gold-hover: #dfb668;
+            --text-light: #f8f8f8;
+            --text-gray: #b0b0b0;
+            --border-color: #333333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Montserrat', sans-serif;
+            text-transform: uppercase;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 5%;
+        }
+
+        /* --- UTILIDADES --- */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .section-header h2 {
+            font-size: 2.8rem;
+            color: var(--accent-gold);
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+        }
+
+        .section-header p {
+            color: var(--text-gray);
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background: linear-gradient(to right, rgba(5,5,5,0.95) 0%, rgba(5,5,5,0.7) 100%), url('WhatsApp Image 2026-08-18 at 6.13.39 PM (2).jpeg') center/cover no-repeat;
+            background-attachment: fixed;
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            padding: 40px;
+        }
+
+        .hero h1 {
+            font-size: 4.5rem;
+            font-weight: 900;
+            letter-spacing: 3px;
+            margin-bottom: 20px;
+            color: #ffffff;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+        }
+
+        .hero h1 span {
+            color: var(--accent-gold);
+        }
+
+        .hero p {
+            font-size: 1.4rem;
+            color: #e0e0e0;
+            margin-bottom: 40px;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--accent-gold);
+            font-size: 1.5rem;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translate(-50%, 0); }
+            40% { transform: translate(-50%, -15px); }
+            60% { transform: translate(-50%, -7px); }
+        }
+
+        /* --- STORY SECTION (TIMELINE LAYOUT) --- */
+        .story-section {
+            padding: 120px 0;
+            background-color: var(--bg-dark);
+        }
+
+        .story-row {
+            display: flex;
+            align-items: center;
+            gap: 60px;
+            margin-bottom: 100px;
+        }
+
+        .story-row:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .story-img-container {
+            flex: 1;
+            position: relative;
+        }
+
+        .story-img-container::before {
+            content: '';
+            position: absolute;
+            top: -15px;
+            left: -15px;
+            width: 100%;
+            height: 100%;
+            border: 2px solid var(--accent-gold);
+            z-index: 0;
+            border-radius: 8px;
+        }
+
+        .story-row:nth-child(even) .story-img-container::before {
+            left: 15px;
+            right: -15px;
+        }
+
+        .story-img-container img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            border-radius: 8px;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+
+        .story-text-container {
+            flex: 1;
+        }
+
+        .story-text-container h3 {
+            font-size: 2rem;
+            color: var(--text-light);
+            margin-bottom: 20px;
+        }
+
+        .story-text-container h3 span {
+            color: var(--accent-gold);
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            text-transform: lowercase;
+            font-size: 2.2rem;
+        }
+
+        .story-text-container p {
+            color: var(--text-gray);
+            font-size: 1.15rem;
+            margin-bottom: 20px;
+        }
+
+        /* --- SERVICES SECTION --- */
+        .services-section {
+            padding: 120px 0;
+            background-color: var(--bg-section);
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .services-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        .service-row {
+            display: flex;
+            background-color: var(--bg-card);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .service-row:hover {
+            border-color: var(--accent-gold);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(197, 160, 89, 0.05);
+        }
+
+        .service-info {
+            flex: 2;
+            padding: 50px;
+        }
+
+        .service-action {
+            flex: 1;
+            background-color: #151515;
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            border-left: 1px solid var(--border-color);
+        }
+
+        .service-info h3 {
+            font-size: 1.8rem;
+            color: var(--text-light);
+            margin-bottom: 15px;
+        }
+
+        .service-info p {
+            color: var(--text-gray);
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+        }
+
+        .service-features {
+            list-style: none;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .service-features li {
+            color: var(--text-light);
+            font-size: 0.95rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .service-features li i {
+            color: var(--accent-gold);
+            margin-top: 5px;
+        }
+
+        .service-price {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent-gold);
+            margin-bottom: 10px;
+        }
+
+        .service-price span {
+            display: block;
+            font-size: 1rem;
+            color: var(--text-gray);
+            font-weight: 400;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 16px 32px;
+            background-color: var(--accent-gold);
+            color: var(--bg-dark);
+            text-decoration: none;
+            font-weight: 700;
+            font-family: 'Montserrat', sans-serif;
+            text-transform: uppercase;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            border: 2px solid var(--accent-gold);
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            letter-spacing: 1px;
+        }
+
+        .btn:hover {
+            background-color: transparent;
+            color: var(--accent-gold);
+        }
+
+        /* --- CONTACT FORM SECTION --- */
+        .form-section {
+            padding: 120px 0;
+            background-color: var(--bg-dark);
+        }
+
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: var(--bg-card);
+            padding: 60px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            color: var(--text-gray);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 18px;
+            background-color: var(--bg-dark);
+            border: 1px solid var(--border-color);
+            color: white;
+            border-radius: 4px;
+            font-family: 'Inter', sans-serif;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent-gold);
+        }
+
+        /* --- MEDIA & SOCIALS --- */
+        .media-section {
+            padding: 100px 0;
+            background-color: var(--bg-section);
+            text-align: center;
+        }
+
+        .social-grid {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-top: 50px;
+        }
+
+        .social-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 40px 30px;
+            border-radius: 12px;
+            width: 250px;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .social-card i {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: var(--text-light);
+            transition: color 0.3s;
+        }
+
+        .social-card h4 {
+            color: var(--text-light);
+            margin-bottom: 10px;
+        }
+
+        .social-card p {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+
+        .social-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent-gold);
+        }
+
+        .social-card.spotify:hover i { color: #1DB954; }
+        .social-card.youtube:hover i { color: #FF0000; }
+        .social-card.instagram:hover i { color: #E1306C; }
+        .social-card.tiktok:hover i { color: #00f2fe; }
+
+        /* --- FOOTER --- */
+        .footer {
+            padding: 100px 20px;
+            background-color: #000;
+            text-align: center;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .disruptive-quote {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: #ffffff;
+            line-height: 1.2;
+            text-transform: uppercase;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .disruptive-quote span {
+            color: var(--accent-gold);
+            display: block;
+            margin-top: 10px;
+        }
+
+        .footer-credits {
+            margin-top: 60px;
+            color: #555;
+            font-size: 0.9rem;
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 992px) {
+            .story-row, .story-row:nth-child(even) {
+                flex-direction: column;
+                gap: 40px;
+            }
+            .service-row {
+                flex-direction: column;
+            }
+            .service-action {
+                border-left: none;
+                border-top: 1px solid var(--border-color);
+            }
+            .hero h1 { font-size: 3rem; }
+            .disruptive-quote { font-size: 2.5rem; }
+        }
+
+        @media (max-width: 768px) {
+            .form-grid { grid-template-columns: 1fr; }
+            .service-features { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 2.5rem; }
+            .hero p { font-size: 1.1rem; }
+            .section-header h2 { font-size: 2.2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <div class="hero-content fade-in">
+            <h1>LA MENTE DETRÁS DEL <span>NEGOCIO</span></h1>
+            <p>Psicología, finanzas y decisiones estratégicas para escalar sin límites. El método para quienes buscan resultados reales, sin atajos.</p>
+        </div>
+        <a href="#historia" class="scroll-indicator"><i class="fas fa-chevron-down"></i></a>
+    </section>
+
+    <!-- STORY SECTION -->
+    <section id="historia" class="story-section">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2>DE LA VILLA AL PROGRESO</h2>
+                <p>Nadie te regala nada. Conoce el camino, los errores y la transformación que forjaron el Método LL.</p>
+            </div>
+
+            <!-- Fila 1: El Origen -->
+            <div class="story-row fade-in">
+                <div class="story-img-container">
+                    <img src="WhatsApp Image 2026-08-18 at 6.13.39 PM.jpeg" alt="Los inicios">
+                </div>
+                <div class="story-text-container">
+                    <h3>El Origen: <span>la calle</span></h3>
+                    <p>Mi camino empezó bien desde abajo, en los pasillos del barrio. Ahí aprendí una lección que ninguna universidad te enseña: si querías algo, te lo tenías que ganar día a día.</p>
+                    <p>Me hice a los golpes. Fracasando en negocios, intentando diferentes rubros, sobreviviendo con locales físicos y volviendo a empezar cuando el panorama se ponía más difícil. La voluntad estaba, pero faltaba el sistema.</p>
+                </div>
+            </div>
+
+            <!-- Fila 2: El Quiebre -->
+            <div class="story-row fade-in">
+                <div class="story-img-container">
+                    <img src="WhatsApp Image 2026-08-18 at 6.13.39 PM (1).jpeg" alt="Estudiando">
+                </div>
+                <div class="story-text-container">
+                    <h3>El Quiebre: <span>la mentalidad</span></h3>
+                    <p>Después de rebuscármela con mil disciplinas, me di cuenta de una verdad incómoda: para cambiar mi realidad financiera y mi entorno, primero tenía que cambiar lo que tenía en la cabeza.</p>
+                    <p>Tuve que reprogramar mi mente desde cero. Me aislé y me metí a fondo a estudiar psicología humana, estrategias de venta de alto nivel, cierres de negocios y la frialdad de los números. Buscaba las respuestas que la calle sola ya no me podía dar.</p>
+                </div>
+            </div>
+
+            <!-- Fila 3: El Resultado -->
+            <div class="story-row fade-in">
+                <div class="story-img-container">
+                    <img src="WhatsApp Image 2026-08-18 at 6.13.39 PM (2).jpeg" alt="El Progreso">
+                </div>
+                <div class="story-text-container">
+                    <h3>La Materialización: <span>el sistema</span></h3>
+                    <p>Toda esa teoría y práctica se fusionaron. Así fue como logré armar el ecosistema de negocios que hoy implemento y que, de forma comprobada, funciona. Lo llamé el Método LL.</p>
+                    <p>Hoy estoy acá para demostrarte que, vengas de donde vengas, sin importar tu punto de partida, si tenés el hambre y la disciplina extrema para transformar tu mentalidad, el éxito se puede estructurar y alcanzar.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SERVICES SECTION -->
+    <section class="services-section">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2>ECOSISTEMA DE MENTORÍAS</h2>
+                <p>No vendo motivación vacía. Ofrezco sistemas, procesos y acompañamiento estratégico. Elegí el nivel que se adapte a la etapa actual de tu negocio.</p>
+            </div>
+
+            <div class="services-wrapper">
+                
+                <!-- Servicio 1 -->
+                <div class="service-row fade-in">
+                    <div class="service-info">
+                        <h3>1. La Mente Detrás del Negocio</h3>
+                        <p>El punto de partida. Una comunidad exclusiva diseñada para enseñarte las bases fundamentales para crear y sostener un negocio rentable en el tiempo, trabajando primero en tus creencias limitantes.</p>
+                        <ul class="service-features">
+                            <li><i class="fas fa-check"></i> Biblioteca de recursos estratégicos</li>
+                            <li><i class="fas fa-check"></i> 1 Llamada grupal semanal de mentoría</li>
+                            <li><i class="fas fa-check"></i> Comunidad privada de networking</li>
+                            <li><i class="fas fa-check"></i> Bases de psicología y finanzas</li>
+                        </ul>
+                    </div>
+                    <div class="service-action">
+                        <div class="service-price">
+                            $49.999 ARS
+                            <span>o $50 USD (Pago Único)</span>
+                        </div>
+                        <a href="https://wa.me/541176550332?text=Hola%20Lucas!%20Quiero%20ingresar%20a%20la%20comunidad%20La%20Mente%20Detr%C3%A1s%20del%20Negocio." target="_blank" class="btn">Ingresar Ahora</a>
+                    </div>
+                </div>
+
+                <!-- Servicio 2 -->
+                <div class="service-row fade-in">
+                    <div class="service-info">
+                        <h3>2. Construí tu Primer Negocio</h3>
+                        <p>Acompañamiento dedicado para emprendedores que ya tienen un negocio o están a punto de lanzarlo. Te proporciono la estructura mental y operativa para que no fracases en el intento y logres escalar tus ventas.</p>
+                        <ul class="service-features">
+                            <li><i class="fas fa-check"></i> Mentoría enfocada y dedicada</li>
+                            <li><i class="fas fa-check"></i> Estrategias de adquisición de clientes</li>
+                            <li><i class="fas fa-check"></i> Optimización de procesos operativos</li>
+                            <li><i class="fas fa-check"></i> Llamadas de seguimiento semanales</li>
+                        </ul>
+                    </div>
+                    <div class="service-action">
+                        <div class="service-price">
+                            $100.000 ARS
+                            <span>o $100 USD (Suscripción Mensual)</span>
+                        </div>
+                        <a href="https://wa.me/541176550332?text=Hola%20Lucas!%20Me%20interesa%20la%20mentor%C3%ADa%20Constru%C3%AD%20tu%20Primer%20Negocio." target="_blank" class="btn">Aplicar al Programa</a>
+                    </div>
+                </div>
+
+                <!-- Servicio 3 -->
+                <div class="service-row fade-in">
+                    <div class="service-info">
+                        <h3>3. Escalá Personalizado (1 a 1)</h3>
+                        <p>Mi tiempo exclusivo para tu negocio. Destrabamos tu realidad actual trabajando de forma directa. Análisis profundo de tu psicología, tus cuellos de botella operativos y estrategias agresivas de persuasión para escalar tu facturación.</p>
+                        <ul class="service-features">
+                            <li><i class="fas fa-check"></i> Acceso directo y personal a Lucas</li>
+                            <li><i class="fas fa-check"></i> Auditoría completa de tu modelo de negocio</li>
+                            <li><i class="fas fa-check"></i> Tácticas avanzadas de cierre de ventas</li>
+                            <li><i class="fas fa-check"></i> Cupos estrictamente limitados</li>
+                        </ul>
+                    </div>
+                    <div class="service-action">
+                        <div class="service-price">
+                            Entrevista Previa
+                            <span>Requiere evaluación de perfil</span>
+                        </div>
+                        <a href="https://wa.me/541176550332?text=Hola%20Lucas!%20Quiero%20agendar%20una%20llamada%20de%20evaluaci%C3%B3n%20para%20la%20mentor%C3%ADa%20Escal%C3%A1%20Personalizado%20(1%20a%201)." target="_blank" class="btn">Agendar Llamada</a>
+                    </div>
+                </div>
+
+                <!-- Servicio 4 -->
+                <div class="service-row fade-in">
+                    <div class="service-info">
+                        <h3>4. Sistema para Prestamistas</h3>
+                        <p>El software y sistema operativo definitivo creado bajo el Método LL. Diseñado específicamente para automatizar, profesionalizar y escalar la gestión de carteras para prestamistas, reduciendo la morosidad y aumentando la rentabilidad.</p>
+                        <ul class="service-features">
+                            <li><i class="fas fa-check"></i> Control absoluto de flujos de caja</li>
+                            <li><i class="fas fa-check"></i> Gestión de clientes y cobros</li>
+                            <li><i class="fas fa-check"></i> Asesoría de implementación técnica</li>
+                        </ul>
+                    </div>
+                    <div class="service-action">
+                        <div class="service-price">
+                            A Consultar
+                            <span>Cotización según cartera</span>
+                        </div>
+                        <a href="https://wa.me/541176550332?text=Hola%20Lucas!%20Necesito%20informaci%C3%B3n%20sobre%20el%20Sistema%20para%20Prestamistas." target="_blank" class="btn">Solicitar Demo</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- FORMULARIO DE APLICACIÓN -->
+    <section class="form-section">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2>DA EL PRIMER PASO</h2>
+                <p>Completa este formulario con total transparencia. La información irá directamente a mi WhatsApp personal para evaluar cómo puedo ayudarte.</p>
+            </div>
+            
+            <div class="form-container fade-in">
+                <form id="contactForm" onsubmit="enviarWhatsApp(event)">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="nombre">Nombre Completo</label>
+                            <input type="text" id="nombre" class="form-control" required placeholder="Ej: Juan Pérez">
+                        </div>
+                        <div class="form-group">
+                            <label for="pais">País de Residencia</label>
+                            <input type="text" id="pais" class="form-control" required placeholder="Ej: Argentina">
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="interes">¿En qué nivel te encuentras?</label>
+                            <select id="interes" class="form-control" required>
+                                <option value="" disabled selected>Selecciona una opción...</option>
+                                <option value="La Mente Detrás del Negocio">Quiero aprender las bases (La Mente Detrás del Negocio)</option>
+                                <option value="Construí tu Primer Negocio">Tengo/Quiero un negocio (Construí tu Primer Negocio)</option>
+                                <option value="Escalá Personalizado (1 a 1)">Quiero escalar fuerte (Mentoría 1 a 1)</option>
+                                <option value="Sistema para Prestamistas">Soy prestamista y necesito el Sistema</option>
+                            </select>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="situacion">Describe tu situación actual y tu mayor problema a resolver:</label>
+                            <textarea id="situacion" class="form-control" rows="4" required placeholder="Sé detallado. ¿Qué te frena hoy?"></textarea>
+                        </div>
+                        <div class="form-group full-width">
+                            <button type="submit" class="btn" style="width: 100%;">
+                                <i class="fab fa-whatsapp" style="margin-right: 8px;"></i> Enviar Aplicación Directa
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- SOCIAL MEDIA -->
+    <section class="media-section">
+        <div class="container fade-in">
+            <h2>POTENCIÁ TU MENTE TODOS LOS DÍAS</h2>
+            <p style="color: var(--text-gray); margin-top: 15px;">Transparencia absoluta. Documento mi proceso y comparto valor real en mis plataformas.</p>
+            
+            <div class="social-grid">
+                <a href="#" class="social-card spotify" onclick="alert('Canal de Spotify en construcción. ¡Próximamente videos diarios!')">
+                    <i class="fab fa-spotify"></i>
+                    <h4>Spotify</h4>
+                    <p>Reflexiones diarias</p>
+                </a>
+                <a href="#" class="social-card youtube" onclick="alert('Canal de YouTube en construcción.')">
+                    <i class="fab fa-youtube"></i>
+                    <h4>YouTube</h4>
+                    <p>Clases y estrategias</p>
+                </a>
+                <a href="#" class="social-card instagram">
+                    <i class="fab fa-instagram"></i>
+                    <h4>Instagram</h4>
+                    <p>El día a día del negocio</p>
+                </a>
+                <a href="#" class="social-card tiktok">
+                    <i class="fab fa-tiktok"></i>
+                    <h4>TikTok</h4>
+                    <p>Conceptos rápidos</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container fade-in">
+            <h2 class="disruptive-quote">
+                "SI NO CAMBIÁS HOY, EL FUTURO NO CAMBIA."
+                <span>LO QUE NO CRECE, DECRECE.</span>
+            </h2>
+            <div class="footer-credits">
+                <p>&copy; 2026 Método LL. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- SCRIPT PARA ANIMACIONES Y WHATSAPP -->
+    <script>
+        // Intersección Observer para las animaciones Fade-in al hacer scroll
+        document.addEventListener("DOMContentLoaded", () => {
+            const faders = document.querySelectorAll('.fade-in');
+            const appearOptions = {
+                threshold: 0.15,
+                rootMargin: "0px 0px -50px 0px"
+            };
+
+            const appearOnScroll = new IntersectionObserver(function(entries, observer) {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting) {
+                        return;
+                    } else {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, appearOptions);
+
+            faders.forEach(fader => {
+                appearOnScroll.observe(fader);
+            });
+            
+            // Forzar aparición del hero si está arriba
+            setTimeout(() => {
+                document.querySelector('.hero-content').classList.add('visible');
+            }, 100);
+        });
+
+        // Lógica del Formulario hacia WhatsApp
+        function enviarWhatsApp(e) {
+            e.preventDefault();
+            const nombre = document.getElementById('nombre').value;
+            const pais = document.getElementById('pais').value;
+            const interes = document.getElementById('interes').value;
+            const situacion = document.getElementById('situacion').value;
+            
+            const numero = "541176550332";
+            const mensaje = `*NUEVA APLICACIÓN - MÉTODO LL*%0A%0A*Nombre:* ${nombre}%0A*País:* ${pais}%0A*Nivel de Interés:* ${interes}%0A%0A*Situación actual / Desafío:* %0A"${situacion}"%0A%0AHola Lucas, acabo de completar el formulario en la web y quiero dar el siguiente paso.`;
+            
+            const url = `https://wa.me/${numero}?text=${mensaje}`;
+            window.open(url, '_blank');
+        }
+    </script>
+</body>
+</html>
