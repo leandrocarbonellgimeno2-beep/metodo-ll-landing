@@ -15,7 +15,7 @@ const services = [
       "Bases de psicología y finanzas",
     ],
     price: "$49.999 ARS",
-    subprice: "o $50 USD (Pago Único)",
+    subprice: "o $50 USD (Suscripción Mensual)",
     buttonText: "Ingresar Ahora",
     waMessage: "Hola Lucas! Quiero ingresar a la comunidad La Mente Detrás del Negocio.",
   },
@@ -50,7 +50,24 @@ const services = [
     waMessage: "Hola Lucas! Quiero agendar una llamada de evaluación para la mentoría Escalá Personalizado (1 a 1).",
   },
   {
-    title: "4. Sistema para Prestamistas",
+    title: "4. Aprender a invertir en negocios rentables",
+    description:
+      "Aprende a invertir en negocios rentables. La inversión que pones en tu capacitación la recuperas en un mes con un método probado por mí.",
+    extraParagraph:
+      "Toda la inversión que pones en tu capacitación la recuperas en un mes con un método probado por mí, de la mano de Lucas.",
+    features: [
+      "Capacitación intensiva en inversión de negocios",
+      "Método probado para recuperar inversión en 1 mes",
+      "Estrategias de análisis de rentabilidad",
+      "Acompañamiento directo de la mano de Lucas",
+    ],
+    price: "$870.000 ARS",
+    subprice: "(y para afuera 800 USD)",
+    buttonText: "Aplicar Ahora",
+    waMessage: "Hola Lucas! Me interesa aprender a invertir en negocios rentables.",
+  },
+  {
+    title: "5. Asesoría en Prestamistas",
     description:
       "El software y sistema operativo definitivo creado bajo el Método LL. Diseñado específicamente para automatizar, profesionalizar y escalar la gestión de carteras para prestamistas, reduciendo la morosidad y aumentando la rentabilidad.",
     features: [
@@ -61,7 +78,7 @@ const services = [
     price: "A Consultar",
     subprice: "Cotización según cartera",
     buttonText: "Solicitar Demo",
-    waMessage: "Hola Lucas! Necesito información sobre el Sistema para Prestamistas.",
+    waMessage: "Hola Lucas! Necesito información sobre la Asesoría en Prestamistas.",
   },
 ];
 
@@ -82,6 +99,9 @@ export default function Services() {
           </h2>
           <p className="text-base sm:text-xl text-[#b0b0b0] max-w-2xl mx-auto leading-relaxed">
             No vendo motivación vacía. Ofrezco sistemas, procesos y acompañamiento estratégico. Elegí el nivel que se adapte a la etapa actual de tu negocio.
+          </p>
+          <p className="text-sm sm:text-base text-[#c5a059] italic mt-3 font-medium">
+            Métodos son un link, si no al pedo.
           </p>
         </motion.div>
 
@@ -104,9 +124,14 @@ export default function Services() {
                     <h3 className="text-2xl sm:text-3xl font-bold text-white mb-4 uppercase font-heading">
                       {service.title}
                     </h3>
-                    <p className="text-[#b0b0b0] text-base sm:text-lg leading-relaxed mb-8 font-light">
+                    <p className="text-[#b0b0b0] text-base sm:text-lg leading-relaxed mb-4 font-light">
                       {service.description}
                     </p>
+                    {service.extraParagraph && (
+                      <p className="text-[#c5a059] text-sm sm:text-base leading-relaxed mb-6 font-medium italic">
+                        {service.extraParagraph}
+                      </p>
+                    )}
                   </div>
 
                   <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-[#262626]">

@@ -12,7 +12,8 @@ export const leadSchema = z.object({
       "La Mente Detrás del Negocio",
       "Construí tu Primer Negocio",
       "Escalá Personalizado (1 a 1)",
-      "Sistema para Prestamistas",
+      "Aprender a invertir en negocios rentables",
+      "Asesoría en Prestamistas",
     ],
     {
       errorMap: () => ({ message: "Selecciona una opción de interés válida." }),

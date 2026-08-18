@@ -216,8 +216,11 @@ export default function ContactForm() {
                     <option value="Escalá Personalizado (1 a 1)">
                       Quiero escalar fuerte (Mentoría 1 a 1)
                     </option>
-                    <option value="Sistema para Prestamistas">
-                      Soy prestamista y necesito el Sistema
+                    <option value="Aprender a invertir en negocios rentables">
+                      Quiero aprender a invertir en negocios rentables ($870.000 ARS / 800 USD)
+                    </option>
+                    <option value="Asesoría en Prestamistas">
+                      Soy prestamista y necesito Asesoría / Sistema
                     </option>
                   </select>
                   {errors.interes && (
