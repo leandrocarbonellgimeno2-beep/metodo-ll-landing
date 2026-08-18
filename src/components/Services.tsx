@@ -29,7 +29,7 @@ const services = [
       "Optimización de procesos operativos",
       "Llamadas de seguimiento semanales",
     ],
-    price: "$100.000 ARS",
+    price: "$149.000 ARS",
     subprice: "o $100 USD (Suscripción Mensual)",
     buttonText: "Aplicar al Programa",
     waMessage: "Hola Lucas! Me interesa la mentoría Construí tu Primer Negocio.",

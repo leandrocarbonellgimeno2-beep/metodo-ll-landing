@@ -7,7 +7,7 @@ import Image from "next/image";
 export default function Hero() {
   return (
     <section className="relative h-screen min-h-[600px] flex items-center justify-center text-center overflow-hidden">
-      {/* Background Image with Dark Overlay */}
+      {/* Background Image with Dynamic Responsive Overlay */}
       <div className="absolute inset-0 z-0">
         <Image
           src="/images/hero-bg.jpeg"
@@ -15,9 +15,9 @@ export default function Hero() {
           fill
           priority
           sizes="100vw"
-          className="object-cover object-center opacity-30 brightness-75 scale-105"
+          className="object-cover object-top sm:object-center opacity-55 sm:opacity-35 brightness-90 sm:brightness-75 scale-105"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#050505]/95 via-[#050505]/80 to-[#050505]/70" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#050505]/85 via-[#050505]/65 to-[#050505]/90 sm:bg-gradient-to-r sm:from-[#050505]/95 sm:via-[#050505]/80 sm:to-[#050505]/70" />
       </div>
 
       {/* Hero Content */}
@@ -27,10 +27,10 @@ export default function Hero() {
         transition={{ duration: 0.8, ease: "easeOut" }}
         className="relative z-10 max-w-[900px] px-6 py-10"
       >
-        <h1 className="font-heading text-4xl sm:text-5xl md:text-7xl font-black tracking-wide text-white mb-6 drop-shadow-md uppercase">
+        <h1 className="font-heading text-4xl sm:text-5xl md:text-7xl font-black tracking-wide text-white mb-6 drop-shadow-lg uppercase">
           LA MENTE DETRÁS DEL <span className="text-[#c5a059]">NEGOCIO</span>
         </h1>
-        <p className="text-lg sm:text-xl md:text-2xl text-[#e0e0e0] font-light max-w-3xl mx-auto leading-relaxed mb-10 tracking-wide">
+        <p className="text-lg sm:text-xl md:text-2xl text-[#e0e0e0] font-light max-w-3xl mx-auto leading-relaxed mb-10 tracking-wide drop-shadow">
           Psicología, finanzas y decisiones estratégicas para escalar sin límites. El método para quienes buscan resultados reales, sin atajos.
         </p>
 
@@ -46,7 +46,7 @@ export default function Hero() {
       <a
         href="#historia"
         aria-label="Scroll down to story section"
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 text-[#c5a059] hover:text-[#dfb668] transition-colors animate-bounce-indicator p-2"
+        className="absolute bottom-8 sm:bottom-10 left-1/2 -translate-x-1/2 z-10 text-[#c5a059] hover:text-[#dfb668] transition-colors animate-bounce-indicator p-2"
       >
         <ChevronDown className="w-8 h-8" />
       </a>
