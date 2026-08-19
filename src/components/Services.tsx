@@ -52,9 +52,9 @@ const services = [
   {
     title: "4. Aprender a invertir en negocios rentables",
     description:
-      "Aprende a invertir en negocios rentables. La inversión que pones en tu capacitación la recuperas en un mes con un método probado por mí.",
+      "Aprende a invertir en negocios rentables. La inversión que pones en tu capacitación la recuperas en un mes con un método probado por mí (dar créditos).",
     extraParagraph:
-      "Tiempo estimado de recuperación de la inversión: entre 1 y 2 meses, aplicando un método probado (dar créditos) y con acompañamiento directo de la mano de Lucas.",
+      "Tiempo estimado de recuperación de la inversión: entre 1 y 2 meses, aplicando un método probado y con acompañamiento directo de la mano de Lucas.",
     features: [
       "Capacitación intensiva en inversión de negocios",
       "Método probado para recuperar inversión en 1 mes",
