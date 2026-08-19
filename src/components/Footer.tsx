@@ -13,9 +13,9 @@ export default function Footer() {
           transition={{ duration: 0.8 }}
         >
           <h2 className="font-heading text-3xl sm:text-5xl md:text-6xl font-black text-white leading-tight tracking-tight">
-            &quot;No se puede tener resultados distintos haciendo siempre lo mismo.&quot;
+            &quot;El riesgo viene de no saber lo que estás haciendo.&quot;
             <span className="block text-[#c5a059] mt-4 text-xl sm:text-2xl font-medium tracking-widest uppercase">
-              — Albert Einstein
+              — Warren Buffett
             </span>
           </h2>
 

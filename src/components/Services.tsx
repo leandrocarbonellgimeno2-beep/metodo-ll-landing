@@ -14,7 +14,7 @@ const services = [
       "Comunidad privada de networking",
       "Bases de psicología y finanzas",
     ],
-    price: "$49.999 ARS",
+    price: "$69.999 ARS",
     subprice: "o $50 USD (Suscripción Mensual)",
     buttonText: "Ingresar Ahora",
     waMessage: "Hola Lucas! Quiero ingresar a la comunidad La Mente Detrás del Negocio.",
@@ -54,14 +54,14 @@ const services = [
     description:
       "Aprende a invertir en negocios rentables. La inversión que pones en tu capacitación la recuperas en un mes con un método probado por mí.",
     extraParagraph:
-      "Tiempo estimado de recuperación de la inversión: entre 1 a 1.5 meses, aplicando un método probado y con acompañamiento directo de la mano de Lucas.",
+      "Tiempo estimado de recuperación de la inversión: entre 1 y 2 meses, aplicando un método probado y con acompañamiento directo de la mano de Lucas.",
     features: [
       "Capacitación intensiva en inversión de negocios",
       "Método probado para recuperar inversión en 1 mes",
       "Estrategias de análisis de rentabilidad",
       "Acompañamiento directo de la mano de Lucas",
     ],
-    price: "$870.000 ARS",
+    price: "$980.000 ARS",
     subprice: "o 800 USD",
     buttonText: "Aplicar Ahora",
     waMessage: "Hola Lucas! Me interesa aprender a invertir en negocios rentables.",
