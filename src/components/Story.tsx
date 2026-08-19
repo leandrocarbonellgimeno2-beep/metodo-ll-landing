@@ -78,13 +78,14 @@ export default function Story() {
                       isEven ? "right-0 lg:-right-3.5" : "left-0 lg:-left-3.5"
                     } w-[calc(100%-8px)] lg:w-full h-full border-2 border-[#c5a059] rounded-xl z-0 transition-transform duration-300 group-hover:scale-[1.01]`}
                   />
-                  <div className="relative z-10 overflow-hidden rounded-xl shadow-2xl shadow-black/90 w-full h-[280px] sm:h-[380px] lg:h-[400px]">
+                  <div className="relative z-10 overflow-hidden rounded-xl shadow-2xl shadow-black/90 w-full">
                     <Image
                       src={story.image}
                       alt={story.alt}
-                      fill
+                      width={800}
+                      height={600}
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
-                      className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                      className="w-full h-auto object-contain transition-transform duration-500 group-hover:scale-[1.02]"
                     />
                   </div>
                 </div>
