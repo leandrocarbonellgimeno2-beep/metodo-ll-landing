@@ -2,22 +2,48 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/firebase";
 import { collection, getDocs, doc, updateDoc, query, orderBy } from "firebase/firestore";
 
-const ADMIN_SECRET = process.env.ADMIN_SECRET_KEY || "metodoll2026";
+const VALID_ADMINS = [
+  { email: "sistemablindaje@gmail.com", pass: "Luc@sSistem@Admin2026!" },
+  { email: "administrador@gmail.com", pass: "Pel@tud@DeMierd@2026!" },
+];
 
 function isAuthorized(request: Request) {
   const authHeader = request.headers.get("x-admin-key") || request.headers.get("authorization");
   if (!authHeader) return false;
-  const token = authHeader.replace("Bearer ", "").trim();
-  return token === ADMIN_SECRET;
+
+  const rawToken = authHeader.replace("Bearer ", "").trim();
+
+  // 1. Check legacy PIN secret
+  const legacySecret = process.env.ADMIN_SECRET_KEY || "metodoll2026";
+  if (rawToken === legacySecret) return true;
+
+  // 2. Try decoding base64 token (email:pass)
+  try {
+    const decoded = Buffer.from(rawToken, "base64").toString("utf-8");
+    const [email, pass] = decoded.split(":");
+
+    if (email && pass) {
+      const match = VALID_ADMINS.find(
+        (u) => u.email.toLowerCase() === email.toLowerCase() && u.pass === pass
+      );
+      if (match) return true;
+    }
+  } catch {
+    // ignore decode error
+  }
+
+  // 3. Direct pass check
+  const passMatch = VALID_ADMINS.some((u) => u.pass === rawToken);
+  return passMatch;
 }
 
 export async function GET(request: Request) {
   // Authorization Check
   if (!isAuthorized(request)) {
-    return NextResponse.json({ success: false, message: "Clave PIN incorrecta." }, { status: 401 });
+    return NextResponse.json({ success: false, message: "Acceso no autorizado." }, { status: 401 });
   }
 
-  // If PIN is valid, attempt Firestore query with safe fallback
+  // If token is valid, attempt Firestore query with safe fallback
   if (!db) {
     return NextResponse.json({
       success: true,
@@ -52,7 +78,6 @@ export async function GET(request: Request) {
   } catch (firestoreError) {
     console.warn("Firestore query warning (falling back to empty list):", firestoreError);
 
-    // Return success=true with empty list so authentication never breaks if Firestore errors out
     return NextResponse.json({
       success: true,
       fallbackMode: true,

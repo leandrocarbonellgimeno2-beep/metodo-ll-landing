@@ -17,6 +17,8 @@ import {
   LogOut,
   X,
   AlertCircle,
+  Mail,
+  KeyRound,
   Database,
 } from "lucide-react";
 
@@ -34,7 +36,9 @@ interface Lead {
 }
 
 export default function AdminPage() {
-  const [pin, setPin] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [activeUserEmail, setActiveUserEmail] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [authError, setAuthError] = useState("");
   const [warningMessage, setWarningMessage] = useState<string | null>(null);
@@ -46,21 +50,57 @@ export default function AdminPage() {
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [, startTransition] = useTransition();
 
-  // Auto login if PIN saved locally
+  // Auto login if token saved in localStorage
   useEffect(() => {
-    const savedPin = localStorage.getItem("admin_pin");
-    if (savedPin) {
-      fetchLeads(savedPin);
+    const savedToken = localStorage.getItem("admin_token");
+    const savedEmail = localStorage.getItem("admin_email");
+    if (savedToken) {
+      setActiveUserEmail(savedEmail || "Administrador");
+      fetchLeads(savedToken);
     }
   }, []);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!pin.trim()) return;
-    fetchLeads(pin.trim());
+    setAuthError("");
+
+    if (!email.trim() || !password.trim()) {
+      setAuthError("Por favor ingresa tu correo y contraseña.");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const res = await fetch("/api/admin/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email.trim(), password: password.trim() }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        setAuthError(data.message || "Credenciales incorrectas.");
+        setIsAuthenticated(false);
+        setLoading(false);
+        return;
+      }
+
+      // Success
+      localStorage.setItem("admin_token", data.token);
+      localStorage.setItem("admin_email", data.email);
+      setActiveUserEmail(data.email);
+      setIsAuthenticated(true);
+      fetchLeads(data.token);
+    } catch (err) {
+      console.error(err);
+      setAuthError("Error de conexión al iniciar sesión.");
+      setLoading(false);
+    }
   };
 
-  const fetchLeads = async (adminPin: string) => {
+  const fetchLeads = async (token: string) => {
     setLoading(true);
     setAuthError("");
     setWarningMessage(null);
@@ -68,23 +108,23 @@ export default function AdminPage() {
     try {
       const res = await fetch("/api/admin/leads", {
         headers: {
-          "x-admin-key": adminPin,
+          "x-admin-key": token,
         },
       });
 
       const data = await res.json();
 
       if (!res.ok || !data.success) {
-        setAuthError(data.message || "Clave PIN incorrecta.");
+        setAuthError(data.message || "Sesión expirada o no autorizada.");
         setIsAuthenticated(false);
-        localStorage.removeItem("admin_pin");
+        localStorage.removeItem("admin_token");
+        localStorage.removeItem("admin_email");
         setLoading(false);
         return;
       }
 
-      // PIN is correct! Authenticate
+      // Token is valid!
       setIsAuthenticated(true);
-      localStorage.setItem("admin_pin", adminPin);
       setLeads(data.leads || []);
 
       if (data.fallbackMode || data.warning) {
@@ -94,15 +134,15 @@ export default function AdminPage() {
       }
     } catch (err) {
       console.error(err);
-      setAuthError("Error al conectar con la API de administración.");
+      setAuthError("Error al recuperar prospectos del servidor.");
     } finally {
       setLoading(false);
     }
   };
 
   const updateLeadStatus = async (leadId: string, newStatus: Lead["status"]) => {
-    const currentPin = localStorage.getItem("admin_pin");
-    if (!currentPin) return;
+    const currentToken = localStorage.getItem("admin_token");
+    if (!currentToken) return;
 
     // Optimistic UI update
     setLeads((prev) =>
@@ -117,7 +157,7 @@ export default function AdminPage() {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
-          "x-admin-key": currentPin,
+          "x-admin-key": currentToken,
         },
         body: JSON.stringify({ leadId, status: newStatus }),
       });
@@ -127,10 +167,13 @@ export default function AdminPage() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("admin_pin");
+    localStorage.removeItem("admin_token");
+    localStorage.removeItem("admin_email");
     setIsAuthenticated(false);
+    setActiveUserEmail(null);
     setLeads([]);
-    setPin("");
+    setEmail("");
+    setPassword("");
   };
 
   // Filtered Leads
@@ -163,15 +206,15 @@ export default function AdminPage() {
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-[#050505] text-white flex items-center justify-center p-6">
-        <div className="w-full max-w-md bg-[#1a1a1a] border border-[#333333] p-8 rounded-2xl shadow-2xl text-center relative overflow-hidden">
+        <div className="w-full max-w-md bg-[#1a1a1a] border border-[#333333] p-8 sm:p-10 rounded-2xl shadow-2xl text-center relative overflow-hidden">
           <div className="w-16 h-16 bg-[#c5a059]/10 border border-[#c5a059]/30 rounded-2xl flex items-center justify-center mx-auto mb-6 text-[#c5a059]">
             <Lock className="w-8 h-8" />
           </div>
           <h1 className="text-2xl font-black uppercase font-heading text-[#c5a059] mb-2 tracking-wider">
-            Método LL Admin
+            MÉTODO LL ADMIN
           </h1>
-          <p className="text-sm text-[#b0b0b0] mb-8">
-            Ingresa tu clave PIN de administración para acceder al panel de prospectos.
+          <p className="text-xs text-[#b0b0b0] mb-8 uppercase tracking-widest font-semibold">
+            Acceso Privado al Panel de Control
           </p>
 
           {authError && (
@@ -181,35 +224,60 @@ export default function AdminPage() {
             </div>
           )}
 
-          <form onSubmit={handleLogin} className="space-y-4">
+          <form onSubmit={handleLogin} className="space-y-4 text-left">
             <div>
-              <input
-                type="password"
-                value={pin}
-                onChange={(e) => setPin(e.target.value)}
-                placeholder="Clave PIN (ej: metodoll2026)"
-                className="w-full p-4 bg-[#050505] border border-[#333333] focus:border-[#c5a059] text-center text-lg font-mono text-white rounded-lg outline-none transition-colors"
-                autoFocus
-              />
+              <label className="block text-[11px] uppercase tracking-wider text-[#b0b0b0] mb-1.5 font-semibold">
+                Correo Electrónico
+              </label>
+              <div className="relative">
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="admin@gmail.com"
+                  className="w-full p-3.5 pl-11 bg-[#050505] border border-[#333333] focus:border-[#c5a059] text-white text-sm rounded-lg outline-none transition-colors"
+                  autoFocus
+                  required
+                />
+                <Mail className="w-4 h-4 text-[#666666] absolute left-4 top-1/2 -translate-y-1/2" />
+              </div>
             </div>
+
+            <div>
+              <label className="block text-[11px] uppercase tracking-wider text-[#b0b0b0] mb-1.5 font-semibold">
+                Contraseña
+              </label>
+              <div className="relative">
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••••••"
+                  className="w-full p-3.5 pl-11 bg-[#050505] border border-[#333333] focus:border-[#c5a059] text-white text-sm rounded-lg outline-none transition-colors"
+                  required
+                />
+                <KeyRound className="w-4 h-4 text-[#666666] absolute left-4 top-1/2 -translate-y-1/2" />
+              </div>
+            </div>
+
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-4 bg-[#c5a059] hover:bg-transparent text-[#050505] hover:text-[#c5a059] font-bold text-sm uppercase tracking-wider rounded-lg border-2 border-[#c5a059] transition-all duration-300 flex items-center justify-center gap-2"
+              className="w-full py-4 mt-2 bg-[#c5a059] hover:bg-transparent text-[#050505] hover:text-[#c5a059] font-bold text-xs uppercase tracking-wider rounded-lg border-2 border-[#c5a059] transition-all duration-300 flex items-center justify-center gap-2"
             >
               {loading ? (
-                <span>Verificando PIN...</span>
+                <span>Autenticando...</span>
               ) : (
                 <>
-                  <span>Ingresar al Panel</span>
+                  <span>Iniciar Sesión Segura</span>
                   <ChevronRight className="w-4 h-4" />
                 </>
               )}
             </button>
           </form>
 
-          <p className="text-[11px] text-[#666666] mt-6">
-            Clave por defecto: <code className="text-[#c5a059]">metodoll2026</code>
+          <p className="text-[10px] text-[#444444] mt-8 uppercase tracking-widest font-mono">
+            Método LL © {new Date().getFullYear()} • Sistema Blindado Privado
           </p>
         </div>
       </div>
@@ -225,19 +293,20 @@ export default function AdminPage() {
             <div className="flex items-center gap-3">
               <ShieldCheck className="w-6 h-6 text-[#c5a059]" />
               <h1 className="text-2xl font-black uppercase tracking-wider text-white font-heading">
-                Panel de Administración <span className="text-[#c5a059]">Método LL</span>
+                MÉTODO LL <span className="text-[#c5a059]">ADMIN</span>
               </h1>
             </div>
-            <p className="text-xs text-[#b0b0b0] mt-1">
-              Gestión y calificación de prospectos recibidos en tiempo real.
+            <p className="text-xs text-[#b0b0b0] mt-1 flex items-center gap-2">
+              <span>Sesión activa:</span>
+              <span className="text-[#c5a059] font-semibold">{activeUserEmail}</span>
             </p>
           </div>
 
           <div className="flex items-center gap-3">
             <button
               onClick={() => {
-                const currentPin = localStorage.getItem("admin_pin");
-                if (currentPin) fetchLeads(currentPin);
+                const currentToken = localStorage.getItem("admin_token");
+                if (currentToken) fetchLeads(currentToken);
               }}
               className="p-3 bg-[#050505] border border-[#333333] hover:border-[#c5a059] text-white rounded-lg transition-colors flex items-center gap-2 text-xs font-semibold"
               title="Actualizar lista"
