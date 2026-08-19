@@ -17,6 +17,7 @@ import {
   LogOut,
   X,
   AlertCircle,
+  Database,
 } from "lucide-react";
 
 interface Lead {
@@ -36,6 +37,7 @@ export default function AdminPage() {
   const [pin, setPin] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [authError, setAuthError] = useState("");
+  const [warningMessage, setWarningMessage] = useState<string | null>(null);
   const [leads, setLeads] = useState<Lead[]>([]);
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
@@ -44,13 +46,13 @@ export default function AdminPage() {
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [, startTransition] = useTransition();
 
-  const savedPin = typeof window !== "undefined" ? localStorage.getItem("admin_pin") : null;
-
+  // Auto login if PIN saved locally
   useEffect(() => {
+    const savedPin = localStorage.getItem("admin_pin");
     if (savedPin) {
       fetchLeads(savedPin);
     }
-  }, [savedPin]);
+  }, []);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -61,12 +63,15 @@ export default function AdminPage() {
   const fetchLeads = async (adminPin: string) => {
     setLoading(true);
     setAuthError("");
+    setWarningMessage(null);
+
     try {
       const res = await fetch("/api/admin/leads", {
         headers: {
           "x-admin-key": adminPin,
         },
       });
+
       const data = await res.json();
 
       if (!res.ok || !data.success) {
@@ -77,12 +82,19 @@ export default function AdminPage() {
         return;
       }
 
+      // PIN is correct! Authenticate
       setIsAuthenticated(true);
       localStorage.setItem("admin_pin", adminPin);
       setLeads(data.leads || []);
+
+      if (data.fallbackMode || data.warning) {
+        setWarningMessage(
+          data.warning || "Base de datos en espera de conexión o vacía. Los leads nuevos aparecerán aquí automáticamente."
+        );
+      }
     } catch (err) {
       console.error(err);
-      setAuthError("Error de conexión al servidor.");
+      setAuthError("Error al conectar con la API de administración.");
     } finally {
       setLoading(false);
     }
@@ -159,11 +171,11 @@ export default function AdminPage() {
             Método LL Admin
           </h1>
           <p className="text-sm text-[#b0b0b0] mb-8">
-            Ingresa tu clave PIN o clave secreta de administración para acceder al panel de prospectos.
+            Ingresa tu clave PIN de administración para acceder al panel de prospectos.
           </p>
 
           {authError && (
-            <div className="mb-6 p-3 bg-red-950/60 border border-red-800 text-red-300 text-xs rounded-lg flex items-center gap-2 text-left">
+            <div className="mb-6 p-3.5 bg-red-950/60 border border-red-800 text-red-300 text-xs rounded-lg flex items-center gap-2 text-left">
               <AlertCircle className="w-4 h-4 shrink-0" />
               <span>{authError}</span>
             </div>
@@ -186,7 +198,7 @@ export default function AdminPage() {
               className="w-full py-4 bg-[#c5a059] hover:bg-transparent text-[#050505] hover:text-[#c5a059] font-bold text-sm uppercase tracking-wider rounded-lg border-2 border-[#c5a059] transition-all duration-300 flex items-center justify-center gap-2"
             >
               {loading ? (
-                <span>Verificando...</span>
+                <span>Verificando PIN...</span>
               ) : (
                 <>
                   <span>Ingresar al Panel</span>
@@ -196,8 +208,8 @@ export default function AdminPage() {
             </button>
           </form>
 
-          <p className="text-[10px] text-[#555555] mt-6">
-            Método LL © {new Date().getFullYear()} - Sistema de Calificación Privado
+          <p className="text-[11px] text-[#666666] mt-6">
+            Clave por defecto: <code className="text-[#c5a059]">metodoll2026</code>
           </p>
         </div>
       </div>
@@ -243,6 +255,14 @@ export default function AdminPage() {
             </button>
           </div>
         </header>
+
+        {/* Warning Banner */}
+        {warningMessage && (
+          <div className="p-4 bg-[#1a1a1a] border border-amber-500/40 rounded-xl flex items-center gap-3 text-amber-200 text-xs">
+            <Database className="w-5 h-5 text-amber-400 shrink-0" />
+            <span>{warningMessage}</span>
+          </div>
+        )}
 
         {/* Metrics Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -339,10 +359,12 @@ export default function AdminPage() {
         {/* Lead Table / List */}
         <div className="bg-[#1a1a1a] border border-[#333333] rounded-xl overflow-hidden shadow-xl">
           {filteredLeads.length === 0 ? (
-            <div className="p-12 text-center text-[#888888]">
+            <div className="p-16 text-center text-[#888888]">
               <Users className="w-12 h-12 mx-auto mb-3 text-[#444444]" />
-              <p className="text-base font-semibold text-white">No se encontraron prospectos</p>
-              <p className="text-xs mt-1">Prueba cambiando los criterios de búsqueda o filtros.</p>
+              <p className="text-base font-semibold text-white">No hay prospectos registrados</p>
+              <p className="text-xs mt-1 max-w-md mx-auto">
+                Los formularios completados por los clientes en la landing page aparecerán aquí automáticamente.
+              </p>
             </div>
           ) : (
             <div className="overflow-x-auto">
