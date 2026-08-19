@@ -50,9 +50,9 @@ const services = [
     waMessage: "Hola Lucas! Quiero agendar una llamada de evaluación para la mentoría Escalá Personalizado (1 a 1).",
   },
   {
-    title: "4. Aprender a invertir en negocios rentables",
+    title: "4. Aprender a invertir en negocios rentables (dar créditos)",
     description:
-      "Aprende a invertir en negocios rentables. La inversión que pones en tu capacitación la recuperas en un mes con un método probado por mí (dar créditos).",
+      "Aprende a invertir en negocios rentables. La inversión que pones en tu capacitación la recuperas en un mes con un método probado por mí.",
     extraParagraph:
       "Tiempo estimado de recuperación de la inversión: entre 1 y 2 meses, aplicando un método probado y con acompañamiento directo de la mano de Lucas.",
     features: [
