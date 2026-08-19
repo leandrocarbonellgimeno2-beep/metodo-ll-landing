@@ -153,7 +153,7 @@ export default function Services() {
                   <div className="text-3xl sm:text-4xl font-black text-[#c5a059] mb-2 font-heading">
                     {service.price}
                   </div>
-                  <span className="text-sm text-[#c5a059] font-semibold mb-8 block">
+                  <span className="text-3xl sm:text-4xl font-black text-[#c5a059] mb-8 block font-heading">
                     {service.subprice}
                   </span>
 
