@@ -67,7 +67,7 @@ const services = [
     waMessage: "Hola Lucas! Me interesa aprender a invertir en negocios rentables.",
   },
   {
-    title: "5. Asesoría en Prestamistas",
+    title: "5. Sistema para Prestamistas",
     description:
       "El software y sistema operativo definitivo creado bajo el Método LL. Diseñado específicamente para automatizar, profesionalizar y escalar la gestión de carteras para prestamistas, reduciendo la morosidad y aumentando la rentabilidad.",
     features: [
