@@ -20,7 +20,7 @@ export default function Footer() {
           </h2>
 
           <div className="mt-16 text-[#555555] text-sm">
-            <p>&copy; {new Date().getFullYear()} Método LL. Todos los derechos reservados.</p>
+            <p>&copy; 2026 Método LL. By Solutech. Todos los derechos reservados.</p>
           </div>
         </motion.div>
       </div>

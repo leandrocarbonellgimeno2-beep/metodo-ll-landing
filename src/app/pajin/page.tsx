@@ -35,7 +35,7 @@ interface Lead {
   createdAt: string;
 }
 
-export default function AdminPage() {
+export default function PajinAdminPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [activeUserEmail, setActiveUserEmail] = useState<string | null>(null);
@@ -277,7 +277,7 @@ export default function AdminPage() {
           </form>
 
           <p className="text-[10px] text-[#444444] mt-8 uppercase tracking-widest font-mono">
-            Método LL © {new Date().getFullYear()} • Sistema Blindado Privado
+            © 2026 Método LL. By Solutech. Todos los derechos reservados.
           </p>
         </div>
       </div>
