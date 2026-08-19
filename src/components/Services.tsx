@@ -54,7 +54,7 @@ const services = [
     description:
       "Aprende a invertir en negocios rentables. La inversión que pones en tu capacitación la recuperas en un mes con un método probado por mí.",
     extraParagraph:
-      "Toda la inversión que pones en tu capacitación la recuperas en un mes con un método probado por mí, de la mano de Lucas.",
+      "Tiempo estimado de recuperación de la inversión: entre 1 a 1.5 meses, aplicando un método probado y con acompañamiento directo de la mano de Lucas.",
     features: [
       "Capacitación intensiva en inversión de negocios",
       "Método probado para recuperar inversión en 1 mes",
@@ -77,7 +77,7 @@ const services = [
     ],
     price: "A Consultar",
     subprice: "Cotización según cartera",
-    buttonText: "Ver Demo del Sistema",
+    buttonText: "Hacé click acá para ver la demo",
     externalUrl: "https://metodoll-by-solutech.vercel.app/",
     waMessage: "Hola Lucas! Necesito información sobre la Asesoría en Prestamistas.",
   },

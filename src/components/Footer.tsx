@@ -12,10 +12,10 @@ export default function Footer() {
           viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.8 }}
         >
-          <h2 className="font-heading text-3xl sm:text-5xl md:text-6xl font-black text-white leading-tight uppercase tracking-tight">
-            &quot;SI NO CAMBIÁS HOY, EL FUTURO NO CAMBIA.&quot;
-            <span className="block text-[#c5a059] mt-3 font-extrabold tracking-normal">
-              LO QUE NO CRECE, DECRECE.
+          <h2 className="font-heading text-3xl sm:text-5xl md:text-6xl font-black text-white leading-tight tracking-tight">
+            &quot;No se puede tener resultados distintos haciendo siempre lo mismo.&quot;
+            <span className="block text-[#c5a059] mt-4 text-xl sm:text-2xl font-medium tracking-widest uppercase">
+              — Albert Einstein
             </span>
           </h2>
 
