@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Check } from "lucide-react";
+import { Check, ExternalLink } from "lucide-react";
 
 const services = [
   {
@@ -42,7 +42,7 @@ const services = [
       "Acceso directo y personal a Lucas",
       "Auditoría completa de tu modelo de negocio",
       "Tácticas avanzadas de cierre de ventas",
-      "Cupos estrictamente limitados",
+      "Cupos strictly limitados",
     ],
     price: "Entrevista Previa",
     subprice: "Requiere evaluación de perfil",
@@ -77,7 +77,8 @@ const services = [
     ],
     price: "A Consultar",
     subprice: "Cotización según cartera",
-    buttonText: "Solicitar Demo",
+    buttonText: "Ver Demo del Sistema",
+    externalUrl: "https://metodoll-by-solutech.vercel.app/",
     waMessage: "Hola Lucas! Necesito información sobre la Asesoría en Prestamistas.",
   },
 ];
@@ -109,6 +110,9 @@ export default function Services() {
         <div className="flex flex-col gap-10">
           {services.map((service, index) => {
             const waUrl = `https://wa.me/541176550332?text=${encodeURIComponent(service.waMessage)}`;
+            const actionUrl = service.externalUrl || waUrl;
+            const isExternal = Boolean(service.externalUrl);
+
             return (
               <motion.div
                 key={index}
@@ -154,12 +158,13 @@ export default function Services() {
                   </span>
 
                   <a
-                    href={waUrl}
+                    href={actionUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full py-4 px-6 bg-[#c5a059] hover:bg-transparent text-[#050505] hover:text-[#c5a059] font-bold text-sm uppercase tracking-wider rounded border-2 border-[#c5a059] transition-all duration-300"
+                    className="w-full py-4 px-6 bg-[#c5a059] hover:bg-transparent text-[#050505] hover:text-[#c5a059] font-bold text-sm uppercase tracking-wider rounded border-2 border-[#c5a059] transition-all duration-300 flex items-center justify-center gap-2"
                   >
-                    {service.buttonText}
+                    <span>{service.buttonText}</span>
+                    {isExternal && <ExternalLink className="w-4 h-4 shrink-0" />}
                   </a>
                 </div>
               </motion.div>
