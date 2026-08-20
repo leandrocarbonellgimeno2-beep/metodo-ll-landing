@@ -101,9 +101,6 @@ export default function Services() {
           <p className="text-base sm:text-xl text-[#b0b0b0] max-w-2xl mx-auto leading-relaxed">
             No vendo motivación vacía. Ofrezco sistemas, procesos y acompañamiento estratégico. Elegí el nivel que se adapte a la etapa actual de tu negocio.
           </p>
-          <p className="text-sm sm:text-base text-[#c5a059] italic mt-3 font-medium">
-            Métodos son un link, si no al pedo.
-          </p>
         </motion.div>
 
         {/* Services List */}
