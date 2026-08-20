@@ -62,7 +62,7 @@ const services = [
       "Acompañamiento directo de la mano de Lucas",
     ],
     price: "$980.000 ARS",
-    subprice: "o 800 USD",
+    subprice: "(o $800 USD)",
     buttonText: "Aplicar Ahora",
     waMessage: "Hola Lucas! Me interesa aprender a invertir en negocios rentables.",
   },
