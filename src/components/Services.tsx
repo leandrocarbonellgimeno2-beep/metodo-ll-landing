@@ -78,7 +78,7 @@ const services = [
     price: "A Consultar",
     subprice: "Cotización según cartera",
     buttonText: "Hacé click acá para ver la demo",
-    externalUrl: "https://metodoll-by-solutech.vercel.app/",
+    externalUrl: "https://metodoll.store/",
     waMessage: "Hola Lucas! Necesito información sobre la Asesoría en Prestamistas.",
   },
 ];
