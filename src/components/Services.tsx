@@ -79,7 +79,7 @@ const services = [
     subprice: "Cotización según cartera",
     buttonText: "Hacé click acá para ver la demo",
     externalUrl: "https://metodoll.store/",
-    waMessage: "Hola Lucas! Necesito información sobre la Asesoría en Prestamistas.",
+    waMessage: "Hola Lucas! Me interesa adquirir el Sistema para Prestamistas.",
   },
 ];
 
@@ -154,15 +154,37 @@ export default function Services() {
                     {service.subprice}
                   </span>
 
-                  <a
-                    href={actionUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full py-4 px-6 bg-[#c5a059] hover:bg-transparent text-[#050505] hover:text-[#c5a059] font-bold text-sm uppercase tracking-wider rounded border-2 border-[#c5a059] transition-all duration-300 flex items-center justify-center gap-2"
-                  >
-                    <span>{service.buttonText}</span>
-                    {isExternal && <ExternalLink className="w-4 h-4 shrink-0" />}
-                  </a>
+                  {index === 4 ? (
+                    <div className="flex flex-col gap-3 w-full">
+                      <a
+                        href={waUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full py-4 px-6 bg-[#c5a059] hover:bg-transparent text-[#050505] hover:text-[#c5a059] font-bold text-sm uppercase tracking-wider rounded border-2 border-[#c5a059] transition-all duration-300 flex items-center justify-center gap-2"
+                      >
+                        <span>ADQUIRIR SISTEMA</span>
+                      </a>
+                      <a
+                        href={service.externalUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full py-3 px-6 bg-transparent hover:bg-[#c5a059]/10 text-[#c5a059] font-semibold text-xs uppercase tracking-wider rounded border-2 border-[#c5a059]/50 hover:border-[#c5a059] transition-all duration-300 flex items-center justify-center gap-2"
+                      >
+                        <span>Más información del sistema</span>
+                        <ExternalLink className="w-3.5 h-3.5 shrink-0" />
+                      </a>
+                    </div>
+                  ) : (
+                    <a
+                      href={actionUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full py-4 px-6 bg-[#c5a059] hover:bg-transparent text-[#050505] hover:text-[#c5a059] font-bold text-sm uppercase tracking-wider rounded border-2 border-[#c5a059] transition-all duration-300 flex items-center justify-center gap-2"
+                    >
+                      <span>{service.buttonText}</span>
+                      {isExternal && <ExternalLink className="w-4 h-4 shrink-0" />}
+                    </a>
+                  )}
                 </div>
               </motion.div>
             );
